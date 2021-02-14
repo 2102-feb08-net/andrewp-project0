@@ -45,13 +45,17 @@ namespace Storefront
                 this._balance = customerInfo.Item3;
                 this._customerId = customerId;
 
-                this._orders = inputter.getCustomerOrders();
+                this._orders = inputter.getCustomerOrders(customerId);
                 getCustomerBalance();
             }
             else
                 throw new ArgumentException("Invalid customer id");
 
         }
+
+        public int CustomerId
+        { get { return _customerId; } }
+
 
         public string FirstName
         {
@@ -88,6 +92,7 @@ namespace Storefront
         public double Balance
         {
             get { return _balance; }
+            set { _balance = value; }
         }
 
 
@@ -97,7 +102,7 @@ namespace Storefront
             {
                 foreach(var product in order.getProducts())
                 {
-                    this._balance -= product.Price;
+                    this._balance -= product.Price * product.Amount;
                 }
             }
         }

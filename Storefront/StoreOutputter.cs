@@ -14,6 +14,18 @@ namespace Storefront
             Console.WriteLine(output);
         }
 
+        public void printCart(Order cart)
+        {
+            Console.WriteLine("");
+            Console.WriteLine(String.Format("{0,-15} {1,-15} {2,-15}", "Name", "Price", "Amount"));
+            foreach (var product in cart.getProducts())
+            {
+                Console.WriteLine(String.Format("{0,-15} {1,-15} {2,-15}", product.Name, product.Price, product.Amount));
+            }
+            Console.WriteLine("");
+        }
+
+
         public void createNewCustomer(int customerId, string firstName, string lastName, double balance)
         {
             try
@@ -26,6 +38,26 @@ namespace Storefront
             catch(Exception)
             {
                 Console.WriteLine("Error creating new customer");
+            }
+        }
+
+        public void newOrder(Order finalOrder)
+        {
+            try
+            {
+                using (var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\orders.txt", true))
+                {
+                    foreach (var product in finalOrder.getProducts())
+                    {
+                        sw.WriteLine($"{finalOrder.OrderId} {finalOrder.CustomerId}" +
+                            $" {finalOrder.Location} {product.Name} " +
+                            $"{product.Price} {product.Amount} {finalOrder.Time.ToShortDateString()} {product.ProductId}");
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Error creating new orders");
             }
         }
 

@@ -8,13 +8,19 @@ namespace Storefront
         private string _name;
         private double _price;
         private int _amount;
+        private int _productId;
 
-        public Product(string name, double price, int amount)
+        public Product(int productId, string name, double price, int amount)
         {
             this.Name = name;
             this.Price = price;
             this._amount = amount;
+            this._productId = productId;
         }
+
+        public int ProductId
+        { get { return _productId; } }
+        
 
         public int Amount
         {

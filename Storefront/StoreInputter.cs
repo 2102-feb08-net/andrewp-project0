@@ -54,14 +54,85 @@ namespace Storefront
             return false;
         }
 
-        public List<Order> getCustomerOrders()
+        public List<Order> getCustomerOrders(int customerId)
         {
-            return new List<Order>();
+            var dict = new Dictionary<int, Order>();
+            try
+            {
+                using (var sr = new StreamReader("C:\\revature\\andrewp-project0\\Storefront\\orders.txt"))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] splitData = line.Split(" ");
+                        int orderId = int.Parse(splitData[0]);
+                        int id = int.Parse(splitData[1]);
+                        if (id == customerId)
+                        {
+                            if (!dict.ContainsKey(orderId))
+                            {
+                                dict.Add(orderId, new Order(splitData[2], id, DateTime.Parse(splitData[6])));
+                            }
+                            dict[orderId].addOrder(new Product(int.Parse(splitData[7]), splitData[3], double.Parse(splitData[4]), int.Parse(splitData[5])));
+                        }
+                        
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                return dict.Values.ToList();
+            }
+            return dict.Values.ToList();
         }
 
-        public List<Order> getLocationOrders()
+        public List<Order> getLocationOrders(string location)
         {
-            return new List<Order>();
+            var dict = new Dictionary<string, Order>();
+            try
+            {
+                using (var sr = new StreamReader("C:\\revature\\andrewp-project0\\Storefront\\orders.txt"))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] splitData = line.Split(" ");
+                        int orderId = int.Parse(splitData[0]);
+                        int id = int.Parse(splitData[1]);
+                        string orderLocation = splitData[2];
+                        if (location == orderLocation)
+                        {
+                            if (!dict.ContainsKey(location))
+                            {
+                                dict.Add(location, new Order(location, id, DateTime.Parse(splitData[6])));
+                            }
+                            dict[location].addOrder(new Product(int.Parse(splitData[7]), splitData[3], double.Parse(splitData[4]), int.Parse(splitData[5])));
+                        }
+
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return dict.Values.ToList();
+            }
+            return dict.Values.ToList();
+        }
+
+        public int getNextOrderId()
+        {
+            int id = 0;
+            try
+            {
+                var line = File.ReadLines("C:\\revature\\andrewp-project0\\Storefront\\orders.txt").Last();
+                string[] splitData = line.Split(" ");
+                return int.Parse(splitData[0]) + 1;
+            }
+            catch (Exception)
+            {
+                return id;
+            }
+            return id;
         }
 
         public int getNextCustomerId()
@@ -117,7 +188,7 @@ namespace Storefront
                         string[] splitData = line.Split(" ");
                         if (splitData.Length == 5 && location.Equals(splitData[0]))
                         {
-                            Product product = new Product(splitData[2], double.Parse(splitData[4]), int.Parse(splitData[3]));
+                            Product product = new Product(int.Parse(splitData[1]), splitData[2], double.Parse(splitData[4]), int.Parse(splitData[3]));
                             dict.Add(int.Parse(splitData[1]), product);
                         }
                     }

@@ -91,12 +91,13 @@ namespace Storefront
             {
                 try
                 {
-                _outputter.printString("1 - Change Customer | 2 - Change Location | 3 - View Current Customer/Location| 4 - View Inventory | 5 - Place Order | 6 - Exit");
+                _outputter.printString("1 - Change Customer | 2 - Change Location | 3 - View Current Customer/Location| 4 - View Inventory | 5 - Add To Cart | 6 - View Cart | 7 - Checkout | 8 - Exit");
                 int userInput = _inputter.getNumber();
                     switch (userInput)
                     {
                         case 1:
                             handleCustomer();
+                            _location.clearCart();
                             break;
                         case 2:
                             handleLocation();
@@ -113,9 +114,15 @@ namespace Storefront
                             _outputter.printString("How many to purchase?");
                             var numInput = _inputter.getNumber();
 
-                            _location.orderProduct(productInput, numInput);
+                            _location.addToCart(productInput, numInput);
                             break;
                         case 6:
+                            _location.printCart();
+                            break;
+                        case 7:
+                            _location.checkout(_customer);
+                            break;
+                        case 8:
                             exit = true;
                             break;
                         default:
