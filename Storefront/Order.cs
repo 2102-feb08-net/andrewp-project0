@@ -13,6 +13,7 @@ namespace Storefront
         private List<Product> _products;
         private int _orderId;
 
+
         public Order(string location, Customer customer, DateTime time)
         {
             _location = location;
@@ -22,9 +23,14 @@ namespace Storefront
             orderSeed += 1;
         }
 
-        public void AddOrder(Product product)
+        public void addOrder(Product product)
         {
             _products.Add(product);
+        }
+
+        public List<Product> getProducts()
+        {
+            return _products;
         }
 
         public override string ToString()

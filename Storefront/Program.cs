@@ -6,7 +6,11 @@ namespace Storefront
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            StoreInputter inputter = new StoreInputter();
+            StoreOutputter outputter = new StoreOutputter();
+
+            StoreIO storeio = new StoreIO(inputter, outputter);
+            storeio.mainLoop();
         }
     }
 }

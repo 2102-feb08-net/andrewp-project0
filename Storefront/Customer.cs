@@ -10,11 +10,47 @@ namespace Storefront
         private string _lastName;
         private double _balance;
         private List<Order> _orders;
+        private int _customerId;
+        private StoreOutputter outputter = new StoreOutputter();
+        private StoreInputter inputter = new StoreInputter();
 
-        public Customer()
+        /// <summary>
+        /// Create new customer with first name, last name, and initial balance.
+        /// </summary>
+        /// <param name="first">First name only alphabet characters.</param>
+        /// <param name="last">Last name only alphabet characters.</param>
+        /// <param name="balance">Initial balance on account.</param>
+        public Customer(string first, string last, double balance = 0.0)
         {
-            _orders = GetOrderHistory();
-            _balance = GetCustomerBalance(_orders);
+            this._customerId = inputter.getNextCustomerId();
+
+            this.FirstName = first;
+            this.LastName = last;
+            this._balance = balance;
+
+            outputter.createNewCustomer(_customerId, this.FirstName, this.LastName, this._balance);
+        }
+
+        /// <summary>
+        /// Check if customer with customerId exists then get first/last name, balance, and orders.
+        /// </summary>
+        /// <param name="customerId">Customer Id</param>
+        public Customer(int customerId)
+        {
+            if (inputter.checkCustomerExists(customerId))
+            {
+                var customerInfo = inputter.getCustomerInfo(customerId);
+                this.FirstName = customerInfo.Item1;
+                this.LastName = customerInfo.Item2;
+                this._balance = customerInfo.Item3;
+                this._customerId = customerId;
+
+                this._orders = inputter.getCustomerOrders();
+                getCustomerBalance();
+            }
+            else
+                throw new ArgumentException("Invalid customer id");
+
         }
 
         public string FirstName
@@ -29,6 +65,7 @@ namespace Storefront
                 {
                     throw new InvalidOperationException("Name can only contain alphabetic letters.");
                 }
+                _firstName = value.ToLower();
             } 
         }
 
@@ -44,17 +81,25 @@ namespace Storefront
                 {
                     throw new InvalidOperationException("Name can only contain alphabetic letters.");
                 }
+                _lastName = value.ToLower();
             }
         }
 
-        private List<Order> GetOrderHistory()
+        public double Balance
         {
-            return new List<Order>();
+            get { return _balance; }
         }
 
-        private double GetCustomerBalance(List<Order> orders)
+
+        private void getCustomerBalance()
         {
-            return 0.0;
+            foreach (var order in this._orders)
+            {
+                foreach(var product in order.getProducts())
+                {
+                    this._balance -= product.Price;
+                }
+            }
         }
 
     }

@@ -1,0 +1,7 @@
+ca 0 pizza 10 5
+ca 1 bread 20 8
+ca 2 pepper 5 3
+tx 3 cheeze 2 5
+tx 4 garlic 14 3.99
+tx 5 orange 4 2.98
+va 6 water 1 1.49
