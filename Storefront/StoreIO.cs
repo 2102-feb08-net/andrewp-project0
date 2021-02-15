@@ -27,7 +27,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - New customer | 2 - Current customer");
+                    _outputter.printString("1 - New Customer | 2 - Current Customer | 3 - View All Customers");
                     var input = _inputter.getNumber();
                     if (input == 1)
                     {
@@ -39,6 +39,7 @@ namespace Storefront
                         var balanceInput = _inputter.getDouble();
 
                         _customer = new Customer(firstNameInput, lastNameInput, balanceInput);
+                        handled = true;
                     }
                     else if (input == 2)
                     {
@@ -46,6 +47,11 @@ namespace Storefront
                         var idInput = _inputter.getNumber();
 
                         _customer = new Customer(idInput);
+                        handled = true;
+                    }
+                    else if (input == 3)
+                    {
+                        _outputter.printAllCustomers(_inputter.getCustomers());
                     }
                     else
                     {
@@ -57,7 +63,6 @@ namespace Storefront
                     _outputter.printString("Invalid Input.\n");
                     continue;
                 }
-                handled = true;
             }
         }
 
@@ -69,17 +74,28 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("What is the store location?");
-                    string inputLocation = _inputter.getString();
-                    Location location = new Location(inputLocation);
-                    _location = location;
+                    _outputter.printString("1 - Choose Store Location | 2 - View All Store Locations");
+                    int inputLocation = _inputter.getNumber();
+                    if (inputLocation == 1)
+                    {
+                        _outputter.printString("What is the location?");
+                        _location = new Location(_inputter.getString());
+                        handled = true;
+                    }
+                    else if (inputLocation == 2)
+                    {
+                        _outputter.printAllLocations(_inputter.getLocations());
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid Input \n");
+                    }
                 }
                 catch (Exception)
                 {
                     _outputter.printString("Invalid Input.\n");
                     continue;
                 }
-                handled = true;
             }
         }
 
@@ -91,24 +107,18 @@ namespace Storefront
             {
                 try
                 {
-                _outputter.printString("1 - Change Customer | 2 - Change Location | 3 - View Current Customer/Location| 4 - View Inventory | 5 - Add To Cart | 6 - View Cart | 7 - Checkout | 8 - Exit");
-                int userInput = _inputter.getNumber();
+                    _outputter.printString("1 - Modify Customer/Location | 2 - View Inventory | 3 - Add To Cart | 4 - View Cart | 5 - Checkout | 6 - Exit");
+                    int userInput = _inputter.getNumber();
+
                     switch (userInput)
                     {
                         case 1:
-                            handleCustomer();
-                            _location.clearCart();
+                            handleCustomerInfo();
                             break;
                         case 2:
-                            handleLocation();
-                            break;
-                        case 3:
-                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance} and current location is {_location.CurrentLocation}\n");
-                            break;
-                        case 4:
                             _outputter.printInventory(_location.getInventory());
                             break;
-                        case 5:
+                        case 3:
                             _outputter.printString("Enter the ProductId.");
                             var productInput = _inputter.getNumber();
                             _outputter.printString("How many to purchase?");
@@ -116,13 +126,13 @@ namespace Storefront
 
                             _location.addToCart(productInput, numInput);
                             break;
-                        case 6:
+                        case 4:
                             _location.printCart();
                             break;
-                        case 7:
+                        case 5:
                             _location.checkout(_customer);
                             break;
-                        case 8:
+                        case 6:
                             exit = true;
                             break;
                         default:
@@ -137,6 +147,44 @@ namespace Storefront
             }
 
         }
+
+        public void handleCustomerInfo()
+        {
+            bool exit = false;
+            while (!exit)
+            {
+                try
+                {
+                    _outputter.printString("1 - Change Customer | 2 - Change Location | 3 - View Current Customer/Location | 4 - Back");
+                    int userInput = _inputter.getNumber();
+                    switch (userInput)
+                    {
+                        case 1:
+                            handleCustomer();
+                            _location.clearCart();
+                            break;
+                        case 2:
+                            handleLocation();
+                            _location.clearCart();
+                            break;
+                        case 3:
+                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance} and current location is {_location.CurrentLocation}\n");
+                            break;
+                        case 4:
+                            exit = true;
+                            break;
+                        default:
+                            _outputter.printString("Invalid Input.\n");
+                            break;
+                    }
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
 
         public void mainLoop()
         {

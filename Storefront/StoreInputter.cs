@@ -25,9 +25,48 @@ namespace Storefront
             return double.Parse(Console.ReadLine());
         }
 
-        public void getCustomers()
+        public HashSet<string> getLocations()
         {
+            var set = new HashSet<string>();
+            try
+            {
+                using (var sr = new StreamReader("C:\\revature\\andrewp-project0\\Storefront\\inventory.txt"))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] splitData = line.Split(" ");
+                        set.Add(splitData[0]);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return set;
+            }
+            return set;
+        }
 
+        public List<(int, string, string)> getCustomers()
+        {
+            var customers = new List<(int, string, string)>();
+            try
+            {
+                using (var sr = new StreamReader("C:\\revature\\andrewp-project0\\Storefront\\customers.txt"))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] splitData = line.Split(" ");
+                        customers.Add((int.Parse(splitData[0]), splitData[1], splitData[2]));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return customers;
+            }
+            return customers;
         }
 
         public bool checkCustomerExists(int customerId)

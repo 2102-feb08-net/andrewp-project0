@@ -12,7 +12,7 @@ namespace Storefront
         private string _location;
         private StoreInputter _inputter = new StoreInputter();
         private StoreOutputter _outputter = new StoreOutputter();
-        private Order _cart;
+        private Dictionary<int, int> _cart;
 
         public string CurrentLocation
         {
@@ -35,13 +35,13 @@ namespace Storefront
                 _inventory = _inputter.getLocationInventory(this.CurrentLocation);
             else
                 throw new InvalidOperationException($"No location for {this.CurrentLocation}");
-            _cart = new Order(_location, -1, DateTime.Now);
+            _cart = new Dictionary<int,int>();
             updateInventory();
         }
 
         public void printCart()
         {
-            _outputter.printCart(_cart);
+            _outputter.printCart(_inventory, _cart);
         }
 
         public void addToCart(int productId, int amount)
@@ -51,26 +51,28 @@ namespace Storefront
                 throw new ArgumentException("Product not in inventory.");
             }
             var inventoryProduct = _inventory[productId];
-            _cart.addOrder(new Product(inventoryProduct.ProductId, inventoryProduct.Name, inventoryProduct.Price, amount));
+            if (!_cart.ContainsKey(productId))
+                _cart.Add(productId, 0);
+            _cart[productId] += amount;
         }
 
         public void clearCart()
         {
-            _cart = new Order(_location, -1, DateTime.Now);
+            _cart = new Dictionary<int, int>();
         }
 
         public void checkout(Customer customer)
         {
-            if (_cart.getProducts().Count == 0)
+            if (_cart.Count == 0)
                 throw new ArgumentException("Cart is empty");
             var checkoutOrder = new Order(_location, customer.CustomerId, DateTime.Now);
 
             double totalPrice = 0.0;
-            foreach (var cartProduct in _cart.getProducts())
+            foreach (var cartProduct in _cart)
             {
-                if (cartProduct.Amount > _inventory[cartProduct.ProductId].Amount)
+                if (cartProduct.Value > _inventory[cartProduct.Key].Amount)
                     throw new ArgumentException("Ordered more than stock.");
-                totalPrice += cartProduct.Amount * cartProduct.Price;
+                totalPrice += _inventory[cartProduct.Key].Price * cartProduct.Value;
             }
 
             if (totalPrice > customer.Balance)
@@ -78,10 +80,11 @@ namespace Storefront
             customer.Balance -= totalPrice;
 
             var finalOrder = new Order(_location, customer.CustomerId, DateTime.Now);
-            foreach (var cartProduct in _cart.getProducts())
+            foreach (var cartProduct in _cart)
             {
-                _inventory[cartProduct.ProductId].Amount -= cartProduct.Amount;
-                finalOrder.addOrder(cartProduct);
+                _inventory[cartProduct.Key].Amount -= cartProduct.Value;
+                var inventoryProduct = _inventory[cartProduct.Key];
+                finalOrder.addOrder(new Product(cartProduct.Key, inventoryProduct.Name, inventoryProduct.Price, cartProduct.Value));
             }
             _outputter.newOrder(finalOrder);
             clearCart();

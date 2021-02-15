@@ -14,13 +14,36 @@ namespace Storefront
             Console.WriteLine(output);
         }
 
-        public void printCart(Order cart)
+        public void printCart(Dictionary<int, Product> inventory, Dictionary<int, int> cart)
         {
             Console.WriteLine("");
             Console.WriteLine(String.Format("{0,-15} {1,-15} {2,-15}", "Name", "Price", "Amount"));
-            foreach (var product in cart.getProducts())
+            foreach (var product in cart)
             {
-                Console.WriteLine(String.Format("{0,-15} {1,-15} {2,-15}", product.Name, product.Price, product.Amount));
+                var inventoryProduct = inventory[product.Key];
+                Console.WriteLine(String.Format("{0,-15} {1,-15} {2,-15}", inventoryProduct.Name, inventoryProduct.Price, product.Value));
+            }
+            Console.WriteLine("");
+        }
+
+        public void printAllCustomers(List<(int, string, string)> customers)
+        {
+            Console.WriteLine("");
+            Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15}", "CustomerId", "First", "Last"));
+            foreach (var customer in customers)
+            {
+                Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15}", customer.Item1, customer.Item2, customer.Item3));
+            }
+            Console.WriteLine("");
+        }
+
+        public void printAllLocations(HashSet<string> locations)
+        {
+            Console.WriteLine("");
+            Console.WriteLine(String.Format("{0,-10}", "Location"));
+            foreach (var location in locations)
+            {
+                Console.WriteLine(String.Format("{0,-10}", location));
             }
             Console.WriteLine("");
         }
