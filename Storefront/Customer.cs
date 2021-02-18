@@ -9,52 +9,22 @@ namespace Storefront
         private string _firstName;
         private string _lastName;
         private double _balance;
-        private List<Order> _orders;
         private int _customerId;
-        private StoreOutputter outputter = new StoreOutputter();
-        private StoreInputter inputter = new StoreInputter();
 
-        /// <summary>
-        /// Create new customer with first name, last name, and initial balance.
-        /// </summary>
-        /// <param name="first">First name only alphabet characters.</param>
-        /// <param name="last">Last name only alphabet characters.</param>
-        /// <param name="balance">Initial balance on account.</param>
-        public Customer(string first, string last, double balance = 0.0)
+        public Customer()
         {
-            this._customerId = inputter.getNextCustomerId();
-
-            this.FirstName = first;
-            this.LastName = last;
-            this._balance = balance;
-
-            outputter.createNewCustomer(_customerId, this.FirstName, this.LastName, this._balance);
         }
 
-        /// <summary>
-        /// Check if customer with customerId exists then get first/last name, balance, and orders.
-        /// </summary>
-        /// <param name="customerId">Customer Id</param>
-        public Customer(int customerId)
+        public Customer(int customerId, string first, string last, double balance = 0.0)
         {
-            if (inputter.checkCustomerExists(customerId))
-            {
-                var customerInfo = inputter.getCustomerInfo(customerId);
-                this.FirstName = customerInfo.Item1;
-                this.LastName = customerInfo.Item2;
-                this._balance = customerInfo.Item3;
-                this._customerId = customerId;
-
-                this._orders = inputter.getCustomerOrders(customerId);
-                getCustomerBalance();
-            }
-            else
-                throw new ArgumentException("Invalid customer id");
-
+            this.CustomerId = customerId;
+            this.FirstName = first;
+            this.LastName = last;
+            this.Balance = balance;
         }
 
         public int CustomerId
-        { get { return _customerId; } }
+        { get { return _customerId; } set {} }
 
 
         public string FirstName
@@ -92,18 +62,11 @@ namespace Storefront
         public double Balance
         {
             get { return _balance; }
-            set { _balance = value; }
-        }
-
-
-        private void getCustomerBalance()
-        {
-            foreach (var order in this._orders)
+            set 
             {
-                foreach(var product in order.getProducts())
-                {
-                    this._balance -= product.Price * product.Amount;
-                }
+                if (value < 0)
+                    throw new InvalidOperationException("Balance cannot be less than zero.");
+                _balance = value; 
             }
         }
 

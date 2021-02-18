@@ -1,12 +1,1 @@
-0 andrew park 1000
-1 james wilkinson 1000
-2 mike bike 10
-3 james bames 30
-4 bama mama 200
-5 mikey bikey 300
-6 yake bake 500
-7 key board 599
-8 mice rice 299
-9 yoke boke 299
-10 mice tice 999
-11 andy candy 2990
+[{"CustomerId":0,"FirstName":"testfirstone","LastName":"testlastone","Balance":1000},{"CustomerId":1,"FirstName":"testfirsttwo","LastName":"testlasttwo","Balance":2000},{"CustomerId":2,"FirstName":"testfirstthree","LastName":"testlastthree","Balance":3000}]

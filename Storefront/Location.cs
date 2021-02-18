@@ -8,10 +8,7 @@ namespace Storefront
 {
     public class Location
     {
-        private Dictionary<int, Product> _inventory;
         private string _location;
-        private StoreInputter _inputter = new StoreInputter();
-        private StoreOutputter _outputter = new StoreOutputter();
         private Dictionary<int, int> _cart;
 
         public string CurrentLocation
@@ -28,29 +25,29 @@ namespace Storefront
             }
         }
 
+        public Location()
+        {
+            _cart = new Dictionary<int, int>();
+        }
+
         public Location(string location)
         {
             this.CurrentLocation = location;
-            if (doesLocationExist(this.CurrentLocation))
-                _inventory = _inputter.getLocationInventory(this.CurrentLocation);
-            else
-                throw new InvalidOperationException($"No location for {this.CurrentLocation}");
             _cart = new Dictionary<int,int>();
-            updateInventory();
         }
 
-        public void printCart()
-        {
-            _outputter.printCart(_inventory, _cart);
+        public Dictionary<int, int> Cart
+        { get { return _cart; }
+          set { _cart = value; }
         }
 
-        public void addToCart(int productId, int amount)
+
+        public void addToCart(int productId, int amount, Dictionary<int, Product> inventory)
         {
-            if (!_inventory.ContainsKey(productId))
+            if (!inventory.ContainsKey(productId))
             {
                 throw new ArgumentException("Product not in inventory.");
             }
-            var inventoryProduct = _inventory[productId];
             if (!_cart.ContainsKey(productId))
                 _cart.Add(productId, 0);
             _cart[productId] += amount;
@@ -61,56 +58,34 @@ namespace Storefront
             _cart = new Dictionary<int, int>();
         }
 
-        public void checkout(Customer customer)
+        public Order checkout(List<Order> orders, Customer customer, Dictionary<int, Product> inventory)
         {
             if (_cart.Count == 0)
                 throw new ArgumentException("Cart is empty");
-            var checkoutOrder = new Order(_location, customer.CustomerId, DateTime.Now);
 
             double totalPrice = 0.0;
             foreach (var cartProduct in _cart)
             {
-                if (cartProduct.Value > _inventory[cartProduct.Key].Amount)
+                if (cartProduct.Value > inventory[cartProduct.Key].Amount)
                     throw new ArgumentException("Ordered more than stock.");
-                totalPrice += _inventory[cartProduct.Key].Price * cartProduct.Value;
+                totalPrice += inventory[cartProduct.Key].Price * cartProduct.Value;
             }
 
             if (totalPrice > customer.Balance)
                 throw new ArgumentException("Not enough balance on customer.");
             customer.Balance -= totalPrice;
 
-            var finalOrder = new Order(_location, customer.CustomerId, DateTime.Now);
+            var finalOrder = new Order(orders.Select((order) => order.OrderId).Max() + 1, _location, customer.CustomerId, DateTime.Now);
             foreach (var cartProduct in _cart)
             {
-                _inventory[cartProduct.Key].Amount -= cartProduct.Value;
-                var inventoryProduct = _inventory[cartProduct.Key];
+                inventory[cartProduct.Key].Amount -= cartProduct.Value;
+                var inventoryProduct = inventory[cartProduct.Key];
                 finalOrder.addOrder(new Product(cartProduct.Key, inventoryProduct.Name, inventoryProduct.Price, cartProduct.Value));
             }
-            _outputter.newOrder(finalOrder);
+            orders.Add(finalOrder);
             clearCart();
+            return finalOrder;
 
-        }
-
-        public Dictionary<int, Product> getInventory()
-        {
-            return _inventory;
-        }
-
-        private bool doesLocationExist(string location)
-        {
-            return _inputter.checkLocationValid(location);
-        }
-
-        private void updateInventory()
-        {
-            List<Order> orders = _inputter.getLocationOrders(_location);
-            foreach (var order in orders)
-            {
-                foreach (var product in order.getProducts())
-                {
-                    _inventory[product.ProductId].Amount -= product.Amount;
-                }
-            }
         }
     }
 }

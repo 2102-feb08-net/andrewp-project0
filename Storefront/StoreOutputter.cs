@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Storefront
 {
@@ -26,18 +28,30 @@ namespace Storefront
             Console.WriteLine("");
         }
 
-        public void printAllCustomers(List<(int, string, string)> customers)
+        public void printAllCustomers(List<Customer> customers)
         {
             Console.WriteLine("");
             Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15}", "CustomerId", "First", "Last"));
             foreach (var customer in customers)
             {
-                Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15}", customer.Item1, customer.Item2, customer.Item3));
+                Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15}", customer.CustomerId, customer.FirstName, customer.LastName));
             }
             Console.WriteLine("");
         }
 
-        public void printAllLocations(HashSet<string> locations)
+        public void printOrders(List<Order> orders)
+        {
+            Console.WriteLine("");
+            Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10}", "OrderId", "CustomerId", "Product Name", "Price", "Amount"));
+            foreach (var order in orders)
+            {
+                foreach (var product in order.Products)
+                    Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10}", order.OrderId, order.CustomerId, product.Name, product.Price, product.Amount));
+            }
+            Console.WriteLine("");
+        }
+
+        public void printAllLocations(List<string> locations)
         {
             Console.WriteLine("");
             Console.WriteLine(String.Format("{0,-10}", "Location"));
@@ -48,39 +62,48 @@ namespace Storefront
             Console.WriteLine("");
         }
 
-
-        public void createNewCustomer(int customerId, string firstName, string lastName, double balance)
+        public void saveAllInventory(Dictionary<string, List<Product>> inventory)
         {
             try
             {
-                using(var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\customers.txt", true))
+                using (var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\inventory.txt", false))
                 {
-                    sw.WriteLine($"{customerId} {firstName} {lastName} {balance}");
+                    sw.WriteLine(JsonSerializer.Serialize(inventory));
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
-                Console.WriteLine("Error creating new customer");
+                Console.WriteLine("Error creating new orders");
             }
         }
 
-        public void newOrder(Order finalOrder)
+        public void saveAllOrders(List<Order> orders)
         {
             try
             {
-                using (var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\orders.txt", true))
+                using (var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\orders.txt", false))
                 {
-                    foreach (var product in finalOrder.getProducts())
-                    {
-                        sw.WriteLine($"{finalOrder.OrderId} {finalOrder.CustomerId}" +
-                            $" {finalOrder.Location} {product.Name} " +
-                            $"{product.Price} {product.Amount} {finalOrder.Time.ToShortDateString()} {product.ProductId}");
-                    }
+                    sw.WriteLine(JsonSerializer.Serialize(orders));
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Console.WriteLine("Error creating new orders");
+            }
+        }
+
+        public void saveCustomers(List<Customer> customers)
+        {
+            try
+            {
+                using (var sw = new StreamWriter("C:\\revature\\andrewp-project0\\Storefront\\customers.txt", false))
+                {
+                    sw.WriteLine(JsonSerializer.Serialize(customers));
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error saving customer's to disk.");
             }
         }
 
