@@ -14,17 +14,16 @@ namespace Storefront
             StoreOutputter outputter = new StoreOutputter();
 
             StoreIO storeio = new StoreIO(inputter, outputter);
-            //storeio.mainLoop();
+            storeio.mainLoop();
 
-            List<Customer> customers = new List<Customer>();
-            Customer cust1 = new Customer("TestFirstOne", "TestLastOne", 1000);
-            Customer cust2 = new Customer("TestFirstTwo", "TestLastTwo", 2000);
-            Customer cust3 = new Customer("TestFirstThree", "TestLastThree", 3000);
-            customers.Add(cust1);
-            customers.Add(cust2);
-            customers.Add(cust3);
-            outputter.saveCustomers(customers);
-            List<Customer> newCustomers = inputter.readAllCustomers();
+            //List<Product> products = new List<Product>();
+            //products.Add(new Product(0, "Pizza", 4.99, 5));
+            //products.Add(new Product(1, "Cheese", 2.99, 10));
+            //products.Add(new Product(2, "Computer", 9.99, 15));
+            //Dictionary<string, List<Product>> inventory = new Dictionary<string, List<Product>>();
+            //inventory.Add("ca", products);
+
+            //outputter.saveAllInventory(inventory);
         }
     }
 }

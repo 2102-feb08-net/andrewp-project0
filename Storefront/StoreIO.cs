@@ -155,11 +155,10 @@ namespace Storefront
                             break;
                         case 5:
                             Order finalOrder = _location.checkout(_orders, _customer, _locationInventory);
-                            _orders.Add(finalOrder);
-                            _inventory[_location.CurrentLocation] = _locationInventory.Values.ToList();
 
                             _outputter.saveAllInventory(_inventory);
                             _outputter.saveAllOrders(_orders);
+                            _outputter.saveCustomers(_customers);
                             break;
                         case 6:
                             exit = true;
@@ -169,7 +168,7 @@ namespace Storefront
                             break;
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     _outputter.printString("Invalid Input.\n");
                 }

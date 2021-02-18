@@ -75,7 +75,11 @@ namespace Storefront
                 throw new ArgumentException("Not enough balance on customer.");
             customer.Balance -= totalPrice;
 
-            var finalOrder = new Order(orders.Select((order) => order.OrderId).Max() + 1, _location, customer.CustomerId, DateTime.Now);
+            Order finalOrder;
+            if (orders.Count == 0)
+                finalOrder = new Order(0, _location, customer.CustomerId, DateTime.Now);
+            else
+                finalOrder = new Order(orders.Select((order) => order.OrderId).Max() + 1, _location, customer.CustomerId, DateTime.Now);
             foreach (var cartProduct in _cart)
             {
                 inventory[cartProduct.Key].Amount -= cartProduct.Value;

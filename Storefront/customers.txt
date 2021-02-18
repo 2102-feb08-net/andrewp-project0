@@ -1,1 +1,1 @@
-[{"CustomerId":0,"FirstName":"testfirstone","LastName":"testlastone","Balance":1000},{"CustomerId":1,"FirstName":"testfirsttwo","LastName":"testlasttwo","Balance":2000},{"CustomerId":2,"FirstName":"testfirstthree","LastName":"testlastthree","Balance":3000}]
+[{"CustomerId":0,"FirstName":"testfirstone","LastName":"testlastone","Balance":871.1899999999999},{"CustomerId":0,"FirstName":"testfirsttwo","LastName":"testlasttwo","Balance":2000},{"CustomerId":0,"FirstName":"testfirstthree","LastName":"testlastthree","Balance":3000}]
