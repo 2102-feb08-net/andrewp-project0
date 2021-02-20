@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Storefront
 {
+    /// <summary>
+    /// The class to represent the location and it's inventory
+    /// </summary>
     public class Location
     {
         private string _location;
@@ -21,7 +24,7 @@ namespace Storefront
             {
                 if (!value.All(char.IsLetterOrDigit))
                     throw new InvalidOperationException("Only alphanumeric characters for locations");
-                _location = value.ToLower();
+                _location = value;
             }
         }
 
@@ -41,7 +44,12 @@ namespace Storefront
           set { _cart = value; }
         }
 
-
+        /// <summary>
+        /// Add an item to the location's cart
+        /// </summary>
+        /// <param name="productId">The product id of the product being placed in the cart</param>
+        /// <param name="amount">The amount of the product being ordered</param>
+        /// <param name="inventory">The dictionary inventory of how many products are in the store</param>
         public void addToCart(int productId, int amount, Dictionary<int, Product> inventory)
         {
             if (!inventory.ContainsKey(productId))
@@ -53,11 +61,21 @@ namespace Storefront
             _cart[productId] += amount;
         }
 
+        /// <summary>
+        /// Clear the cart of all it's products
+        /// </summary>
         public void clearCart()
         {
             _cart = new Dictionary<int, int>();
         }
 
+        /// <summary>
+        /// Checkout the items placed in the cart
+        /// </summary>
+        /// <param name="orders">A list of all the current orders</param>
+        /// <param name="customer">The customer who placed the orders</param>
+        /// <param name="inventory">The current inventory of the location</param>
+        /// <returns></returns>
         public Order checkout(List<Order> orders, Customer customer, Dictionary<int, Product> inventory)
         {
             if (_cart.Count == 0)

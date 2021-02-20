@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Storefront
 {
+    /// <summary>
+    /// The class to represent a product
+    /// </summary>
     public class Product
     {
         private string _name;
@@ -10,6 +13,13 @@ namespace Storefront
         private int _amount;
         private int _productId;
 
+        /// <summary>
+        /// Class to represent a product sold on the store
+        /// </summary>
+        /// <param name="productId">The product id</param>
+        /// <param name="name">The product name</param>
+        /// <param name="price">The price of the product</param>
+        /// <param name="amount">The amount of product if in an inventory</param>
         public Product(int productId, string name, double price, int amount)
         {
             this.Name = name;

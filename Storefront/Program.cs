@@ -15,15 +15,6 @@ namespace Storefront
 
             StoreIO storeio = new StoreIO(inputter, outputter);
             storeio.mainLoop();
-
-            //List<Product> products = new List<Product>();
-            //products.Add(new Product(0, "Pizza", 4.99, 5));
-            //products.Add(new Product(1, "Cheese", 2.99, 10));
-            //products.Add(new Product(2, "Computer", 9.99, 15));
-            //Dictionary<string, List<Product>> inventory = new Dictionary<string, List<Product>>();
-            //inventory.Add("ca", products);
-
-            //outputter.saveAllInventory(inventory);
         }
     }
 }

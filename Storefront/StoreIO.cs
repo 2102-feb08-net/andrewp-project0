@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Storefront.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,17 +18,24 @@ namespace Storefront
         private List<Order> _orders;
         private Dictionary<string, List<Product>> _inventory;
         private Dictionary<int, Product> _locationInventory;
+        private StoreRespository _storeRespository;
 
         public StoreIO(StoreInputter inputter, StoreOutputter outputter)
         {
             this._inputter = inputter;
             this._outputter = outputter;
-            this._customers = inputter.readAllCustomers();
-            this._orders = inputter.getAllOrders();
-            _inventory = inputter.getAllInventory();
+            string connectionString = _inputter.readConnectionString();
+            var options = new DbContextOptionsBuilder<StoreDBContext>()
+                .UseSqlServer(connectionString)
+                //.LogTo(sw.WriteLine, minimumLevel: LogLevel.Information)
+                .Options;
+            _storeRespository = new StoreRespository(options);
+            this._customers = _storeRespository.readAllCustomers();
+            this._orders = _storeRespository.getAllOrders();
+            _inventory = _storeRespository.getAllInventory();
         }
 
-        public void handleCustomer()
+        public void handleCustomer(bool isForeground)
         {
             bool handled = false;
 
@@ -34,7 +43,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - New Customer | 2 - Current Customer | 3 - View All Customers | 4 - View Customer Orders");
+                    _outputter.printString("1 - Enter New Customer | 2 - Enter Current Customer | 3 - View All Customers | 4 - View Customer Orders" + (isForeground ? " | 5 - Back" : ""));
                     var input = _inputter.getNumber();
                     if (input == 1)
                     {
@@ -46,6 +55,7 @@ namespace Storefront
                         var balanceInput = _inputter.getDouble();
 
                         _customer = new Customer(_customers.Max((customer) => customer.CustomerId) + 1, firstNameInput, lastNameInput, balanceInput);
+                        _storeRespository.addCustomer(_customer);
                         handled = true;
                     }
                     else if (input == 2)
@@ -70,7 +80,12 @@ namespace Storefront
                             _outputter.printString("No Customer Selected.\n");
                             continue;
                         }
-                        _outputter.printOrders(_inputter.getCustomerOrders(_customer.CustomerId));
+                        _outputter.printOrders(_storeRespository.getCustomerOrders(_customer.CustomerId));
+                    }
+                    else if (input == 5)
+                    {
+                        if (isForeground)
+                            handled = true;
                     }
                     else
                     {
@@ -85,7 +100,7 @@ namespace Storefront
             }
         }
 
-        public void handleLocation()
+        public void handleLocation(bool isForeground)
         {
             bool handled = false;
 
@@ -93,7 +108,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - Choose Store Location | 2 - View All Store Locations | 3 - View Location Orders");
+                    _outputter.printString("1 - Enter Store Location | 2 - View All Store Locations | 3 - View Location Orders" + (isForeground ? " | 4 - Back" : ""));
                     int inputLocation = _inputter.getNumber();
                     if (inputLocation == 1)
                     {
@@ -104,11 +119,16 @@ namespace Storefront
                     }
                     else if (inputLocation == 2)
                     {
-                        _outputter.printAllLocations(_inputter.getLocations());
+                        _outputter.printAllLocations(_storeRespository.getLocations());
                     }
                     else if (inputLocation == 3)
                     {
-                        _outputter.printOrders(_inputter.getLocationOrders(_location.CurrentLocation));
+                        _outputter.printOrders(_storeRespository.getLocationOrders(_location.CurrentLocation));
+                    }
+                    else if (inputLocation == 4)
+                    {
+                        if (isForeground)
+                            handled = true;
                     }
                     else
                     {
@@ -156,9 +176,9 @@ namespace Storefront
                         case 5:
                             Order finalOrder = _location.checkout(_orders, _customer, _locationInventory);
 
-                            _outputter.saveAllInventory(_inventory);
-                            _outputter.saveAllOrders(_orders);
-                            _outputter.saveCustomers(_customers);
+                            _storeRespository.saveAllInventory(_inventory);
+                            _storeRespository.saveOrder(finalOrder);
+                            _storeRespository.saveCustomer(_customer);
                             break;
                         case 6:
                             exit = true;
@@ -188,15 +208,15 @@ namespace Storefront
                     switch (userInput)
                     {
                         case 1:
-                            handleCustomer();
+                            handleCustomer(true);
                             _location.clearCart();
                             break;
                         case 2:
-                            handleLocation();
+                            handleLocation(true);
                             _location.clearCart();
                             break;
                         case 3:
-                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance} and current location is {_location.CurrentLocation}\n");
+                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance.ToString("0.00")} and current location is {_location.CurrentLocation}\n");
                             break;
                         case 4:
                             exit = true;
@@ -216,8 +236,8 @@ namespace Storefront
 
         public void mainLoop()
         {
-            handleCustomer();
-            handleLocation();
+            handleCustomer(false);
+            handleLocation(false);
             handleStoreOptions();
         }
 

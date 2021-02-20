@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Storefront
 {
+    /// <summary>
+    /// The class to represent the customer
+    /// </summary>
     public class Customer
     {
         private string _firstName;
@@ -24,7 +27,15 @@ namespace Storefront
         }
 
         public int CustomerId
-        { get { return _customerId; } set {} }
+        { 
+            get { return _customerId; }
+            set 
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Customer Id cannot be less than zero.");
+                _customerId = value; 
+            } 
+        }
 
 
         public string FirstName
@@ -39,7 +50,7 @@ namespace Storefront
                 {
                     throw new InvalidOperationException("Name can only contain alphabetic letters.");
                 }
-                _firstName = value.ToLower();
+                _firstName = value;
             } 
         }
 
@@ -55,7 +66,7 @@ namespace Storefront
                 {
                     throw new InvalidOperationException("Name can only contain alphabetic letters.");
                 }
-                _lastName = value.ToLower();
+                _lastName = value;
             }
         }
 

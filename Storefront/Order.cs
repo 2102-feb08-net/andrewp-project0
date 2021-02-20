@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Storefront
 {
+    /// <summary>
+    /// The order class
+    /// </summary>
     public class Order
     {
         private string _location;
@@ -10,6 +13,22 @@ namespace Storefront
         private DateTime _time;
         private List<Product> _products;
         private int _orderId;
+
+        /// <summary>
+        /// The class to represent an order by a customer
+        /// </summary>
+        /// <param name="orderId">The id of the order</param>
+        /// <param name="location">The location the order was placed</param>
+        /// <param name="customerId">The customer id who placed the order</param>
+        /// <param name="time">The date time of the placed order</param>
+        public Order(int orderId, string location, int customerId, DateTime time)
+        {
+            _location = location;
+            _customerId = customerId;
+            _time = time;
+            _orderId = orderId;
+            _products = new List<Product>();
+        }
 
         public int CustomerId
         { get { return _customerId; } }
@@ -34,15 +53,6 @@ namespace Storefront
         public Order()
         {
 
-        }
-
-        public Order(int orderId, string location, int customerId, DateTime time)
-        {
-            _location = location;
-            _customerId = customerId;
-            _time = time;
-            _orderId = orderId;
-            _products = new List<Product>();
         }
 
         public void addOrder(Product product)
