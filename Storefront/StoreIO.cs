@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Storefront.DataAccess;
+using Storefront.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +25,7 @@ namespace Storefront
             this._inputter = inputter;
             this._outputter = outputter;
             string connectionString = _inputter.readConnectionString();
-            var options = new DbContextOptionsBuilder<StoreDBContext>()
-                .UseSqlServer(connectionString)
-                //.LogTo(sw.WriteLine, minimumLevel: LogLevel.Information)
-                .Options;
-            _storeRespository = new StoreRespository(options);
+            _storeRespository = new StoreRespository(StoreRespository.createStoreOptions(connectionString));
             this._customers = _storeRespository.readAllCustomers();
             this._orders = _storeRespository.getAllOrders();
             _inventory = _storeRespository.getAllInventory();
