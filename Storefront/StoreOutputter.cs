@@ -13,7 +13,7 @@ namespace Storefront
     /// <summary>
     /// The store outputter class that handles all the output of the console application
     /// </summary>
-    public class StoreOutputter
+    public class StoreOutputter : IStoreOutputter
     {
         /// <summary>
         /// Print the string value to the console

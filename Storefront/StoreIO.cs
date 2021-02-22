@@ -10,17 +10,17 @@ namespace Storefront
 {
     public class StoreIO
     {
-        private StoreInputter _inputter;
-        private StoreOutputter _outputter;
+        private IStoreInputter _inputter;
+        private IStoreOutputter _outputter;
         private Customer _customer;
         private Location _location;
         private List<Customer> _customers;
         private List<Order> _orders;
         private Dictionary<string, List<Product>> _inventory;
         private Dictionary<int, Product> _locationInventory;
-        private StoreRespository _storeRespository;
+        private IDataRepository _storeRespository;
 
-        public StoreIO(StoreInputter inputter, StoreOutputter outputter)
+        public StoreIO(IStoreInputter inputter, IStoreOutputter outputter)
         {
             this._inputter = inputter;
             this._outputter = outputter;

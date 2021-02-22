@@ -12,7 +12,7 @@ namespace Storefront.Library
     /// <summary>
     /// The Storefront data respository that handles retrieving/storing information to the database 
     /// </summary>
-    public class StoreRespository
+    public class StoreRespository : IDataRepository
     {
         DbContextOptions<StoreDBContext> _options;
 

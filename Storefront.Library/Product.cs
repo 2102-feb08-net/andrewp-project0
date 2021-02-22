@@ -24,12 +24,19 @@ namespace Storefront.Library
         {
             this.Name = name;
             this.Price = price;
-            this._amount = amount;
-            this._productId = productId;
+            this.Amount = amount;
+            this.ProductId = productId;
         }
 
         public int ProductId
-        { get { return _productId; } }
+        { 
+            get { return _productId; }
+            set 
+            { 
+                if (value <= 0) throw new InvalidOperationException("ProductId cannot be zero or less.");
+                _productId = value;
+            }
+        }
         
 
         public int Amount
@@ -40,6 +47,8 @@ namespace Storefront.Library
             }
             set
             {
+                if (value < 0)
+                    throw new InvalidOperationException("Product amount cannot be less than zero.");
                 _amount = value;
             }
         }
@@ -53,6 +62,8 @@ namespace Storefront.Library
             }
             set
             {
+                if (value < 0)
+                    throw new InvalidOperationException("Product price cannot be less than zero.");
                 _price = value;
             }
         }
@@ -67,7 +78,7 @@ namespace Storefront.Library
             {
                 if (!value.All(char.IsLetterOrDigit))
                 {
-                    throw new ArgumentException("Invalid name to product.");
+                    throw new InvalidOperationException("Invalid name to product.");
                 }
                 _name = value;
             }

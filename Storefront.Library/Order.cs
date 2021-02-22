@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Storefront.Library
 {
@@ -23,25 +24,53 @@ namespace Storefront.Library
         /// <param name="time">The date time of the placed order</param>
         public Order(int orderId, string location, int customerId, DateTime time)
         {
-            _location = location;
-            _customerId = customerId;
+            this.Location = location;
+            this.CustomerId = customerId;
             _time = time;
-            _orderId = orderId;
+            this.OrderId = orderId;
             _products = new List<Product>();
         }
 
         public int CustomerId
-        { get { return _customerId; } }
+        { 
+            get { return _customerId; }
+            set 
+            { 
+                if (value <= 0)
+                    throw new InvalidOperationException("Customer Id cannot be less than zero.");
+                _customerId = value;
+            }
+        }
 
         public string Location
-        { get { return _location; } }
+        { 
+            get { return _location; }
+            set 
+            {
+                if (!value.All(char.IsLetterOrDigit))
+                    throw new InvalidOperationException("Only alphanumeric characters for locations");
+                _location = value;
+            }
+        }
 
         public DateTime Time
-        { get { return _time; } }
+        { 
+            get { return _time; }
+            set 
+            {
+                _time = value;
+            }
+        }
 
         public int OrderId
-        { get { return _orderId; }
-          set { _orderId = value; }
+        {
+            get { return _orderId; }
+            set 
+            {
+                if (value <= 0)
+                    throw new InvalidOperationException("Order Id cannot be less than zero.");
+                _orderId = value; 
+            }
         }
 
         public List<Product> Products

@@ -32,7 +32,7 @@ namespace Storefront.Library
             set 
             {
                 if (value <= 0)
-                    throw new ArgumentException("Customer Id cannot be less than zero.");
+                    throw new InvalidOperationException("Customer Id cannot be less than zero.");
                 _customerId = value; 
             } 
         }

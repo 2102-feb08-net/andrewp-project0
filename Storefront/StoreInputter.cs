@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Storefront
 {
-    public class StoreInputter
+    public class StoreInputter : IStoreInputter
     {
 
         /// <summary>

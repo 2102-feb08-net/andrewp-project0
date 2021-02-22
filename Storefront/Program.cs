@@ -10,8 +10,8 @@ namespace Storefront
     {
         static void Main(string[] args)
         {
-            StoreInputter inputter = new StoreInputter();
-            StoreOutputter outputter = new StoreOutputter();
+            IStoreInputter inputter = new StoreInputter();
+            IStoreOutputter outputter = new StoreOutputter();
 
             StoreIO storeio = new StoreIO(inputter, outputter);
             storeio.mainLoop();

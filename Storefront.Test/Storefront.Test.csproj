@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Storefront\Storefront.csproj" />
+    <ProjectReference Include="..\Storefront.Library\Storefront.Library.csproj" />
   </ItemGroup>
 
 </Project>
