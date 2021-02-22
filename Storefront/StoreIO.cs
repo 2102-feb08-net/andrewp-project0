@@ -39,7 +39,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - Enter New Customer | 2 - Enter Current Customer | 3 - View All Customers | 4 - View Customer Orders" + (isForeground ? " | 5 - Back" : ""));
+                    _outputter.printString("\n1 - Enter New Customer\n2 - Enter Current Customer\n3 - View All Customers\n4 - View Customer Orders" + (isForeground ? "\n5 - Back\n" : "\n"));
                     var input = _inputter.getNumber();
                     if (input == 1)
                     {
@@ -63,7 +63,7 @@ namespace Storefront
                         if (_customer != null)
                             handled = true;
                         else
-                            _outputter.printString("Customer Id not found.\n");
+                            _outputter.printString("Customer Id not found.");
                     }
                     else if (input == 3)
                     {
@@ -73,7 +73,7 @@ namespace Storefront
                     {
                         if (_customer == null)
                         {
-                            _outputter.printString("No Customer Selected.\n");
+                            _outputter.printString("No Customer Selected.");
                             continue;
                         }
                         _outputter.printOrders(_storeRespository.getCustomerOrders(_customer.CustomerId));
@@ -90,7 +90,7 @@ namespace Storefront
                 }
                 catch (Exception)
                 {
-                    _outputter.printString("Invalid Input.\n");
+                    _outputter.printString("Invalid Input.");
                     continue;
                 }
             }
@@ -104,7 +104,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - Enter Store Location | 2 - View All Store Locations | 3 - View Location Orders" + (isForeground ? " | 4 - Back" : ""));
+                    _outputter.printString("\n1 - Enter Store Location\n2 - View All Store Locations\n3 - View Location Orders" + (isForeground ? "\n4 - Back\n" : "\n"));
                     int inputLocation = _inputter.getNumber();
                     if (inputLocation == 1)
                     {
@@ -128,12 +128,12 @@ namespace Storefront
                     }
                     else
                     {
-                        throw new InvalidOperationException("Invalid Input \n");
+                        throw new InvalidOperationException("Invalid Input.");
                     }
                 }
                 catch (Exception)
                 {
-                    _outputter.printString("Invalid Input.\n");
+                    _outputter.printString("Invalid Input.");
                     continue;
                 }
             }
@@ -147,7 +147,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - Customer/Location | 2 - View Inventory | 3 - Add To Cart | 4 - View Cart | 5 - Checkout | 6 - Exit");
+                    _outputter.printString("\n1 - Customer/Location\n2 - View Inventory\n3 - Add To Cart\n4 - View Cart\n5 - Checkout\n6 - Exit\n");
                     int userInput = _inputter.getNumber();
 
                     switch (userInput)
@@ -180,13 +180,13 @@ namespace Storefront
                             exit = true;
                             break;
                         default:
-                            _outputter.printString("Invalid Input.\n");
+                            _outputter.printString("Invalid Input.");
                             break;
                     }
                 }
                 catch (Exception e)
                 {
-                    _outputter.printString("Invalid Input.\n");
+                    _outputter.printString("Invalid Input.");
                 }
             }
 
@@ -199,7 +199,7 @@ namespace Storefront
             {
                 try
                 {
-                    _outputter.printString("1 - Customer | 2 - Location | 3 - View Current Customer/Location | 4 - Back");
+                    _outputter.printString("\n1 - Customer\n2 - Location\n3 - View Current Customer/Location\n4 - Back\n");
                     int userInput = _inputter.getNumber();
                     switch (userInput)
                     {
@@ -212,13 +212,13 @@ namespace Storefront
                             _location.clearCart();
                             break;
                         case 3:
-                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance.ToString("0.00")} and current location is {_location.CurrentLocation}\n");
+                            _outputter.printString($"Current customer is {_customer.FirstName} {_customer.LastName} with a balance of {_customer.Balance.ToString("0.00")} and current location is {_location.CurrentLocation}");
                             break;
                         case 4:
                             exit = true;
                             break;
                         default:
-                            _outputter.printString("Invalid Input.\n");
+                            _outputter.printString("Invalid Input.");
                             break;
                     }
 
