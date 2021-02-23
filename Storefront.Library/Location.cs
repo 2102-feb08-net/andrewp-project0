@@ -53,9 +53,9 @@ namespace Storefront.Library
         /// <param name="inventory">The dictionary inventory of how many products are in the store</param>
         public void addToCart(int productId, int amount, Dictionary<int, Product> inventory)
         {
-            if (!inventory.ContainsKey(productId))
+            if (!inventory.ContainsKey(productId) || amount > 50)
             {
-                throw new ArgumentException("Product not in inventory.");
+                throw new ArgumentException("Invalid product or amount.");
             }
             if (!_cart.ContainsKey(productId))
                 _cart.Add(productId, 0);

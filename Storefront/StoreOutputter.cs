@@ -63,11 +63,11 @@ namespace Storefront
         public void printOrders(List<Order> orders)
         {
             Console.WriteLine("");
-            Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10}", "OrderId", "CustomerId", "Product Name", "Price", "Amount"));
+            Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10} {5,-20}", "OrderId", "CustomerId", "Product Name", "Price", "Amount", "Date"));
             foreach (var order in orders)
             {
                 foreach (var product in order.Products)
-                    Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10}", order.OrderId, order.CustomerId, product.Name, product.Price.ToString("0.00"), product.Amount));
+                    Console.WriteLine(String.Format("{0,-10} {1,-15} {2,-15} {3,-10} {4,-10} {5,-20}", order.OrderId, order.CustomerId, product.Name, product.Price.ToString("0.00"), product.Amount, order.Time));
             }
             Console.WriteLine("");
         }
