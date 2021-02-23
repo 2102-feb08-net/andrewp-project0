@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Storefront.Library;
+using lib = Storefront.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Storefront.DataAccess;
 
 namespace Storefront
 {
@@ -12,12 +13,12 @@ namespace Storefront
     {
         private IStoreInputter _inputter;
         private IStoreOutputter _outputter;
-        private Customer _customer;
-        private Location _location;
-        private List<Customer> _customers;
-        private List<Order> _orders;
-        private Dictionary<string, List<Product>> _inventory;
-        private Dictionary<int, Product> _locationInventory;
+        private lib.Customer _customer;
+        private lib.Location _location;
+        private List<lib.Customer> _customers;
+        private List<lib.Order> _orders;
+        private Dictionary<string, List<lib.Product>> _inventory;
+        private Dictionary<int, lib.Product> _locationInventory;
         private IDataRepository _storeRespository;
 
         public StoreIO(IStoreInputter inputter, IStoreOutputter outputter)
@@ -50,7 +51,7 @@ namespace Storefront
                         _outputter.printString("What is the customer's balance?");
                         var balanceInput = _inputter.getDouble();
 
-                        _customer = new Customer(_customers.Max((customer) => customer.CustomerId) + 1, firstNameInput, lastNameInput, balanceInput);
+                        _customer = new lib.Customer(_customers.Max((customer) => customer.CustomerId) + 1, firstNameInput, lastNameInput, balanceInput);
                         _storeRespository.addCustomer(_customer);
                         handled = true;
                     }
@@ -109,7 +110,7 @@ namespace Storefront
                     if (inputLocation == 1)
                     {
                         _outputter.printString("What is the location?");
-                        _location = new Location(_inputter.getString());
+                        _location = new lib.Location(_inputter.getString());
                         _locationInventory = _inventory[_location.CurrentLocation].ToDictionary((product) => product.ProductId, (product) => product);
                         handled = true;
                     }
@@ -170,7 +171,7 @@ namespace Storefront
                             _outputter.printCart(_locationInventory, _location.Cart);
                             break;
                         case 5:
-                            Order finalOrder = _location.checkout(_orders, _customer, _locationInventory);
+                            lib.Order finalOrder = _location.checkout(_orders, _customer, _locationInventory);
 
                             _storeRespository.saveAllInventory(_inventory);
                             _storeRespository.saveOrder(finalOrder);

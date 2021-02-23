@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Storefront.DataAccess\Storefront.DataAccess.csproj" />
     <ProjectReference Include="..\Storefront.Library\Storefront.Library.csproj" />
   </ItemGroup>
 

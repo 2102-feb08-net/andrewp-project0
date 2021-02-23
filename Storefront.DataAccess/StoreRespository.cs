@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Storefront.DataAccess;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using lib = Storefront.Library;
 
-namespace Storefront.Library
+namespace Storefront.DataAccess
 {
     /// <summary>
     /// The Storefront data respository that handles retrieving/storing information to the database 
@@ -47,15 +47,15 @@ namespace Storefront.Library
         /// Get a List of Customers
         /// </summary>
         /// <returns>List of Customers</returns>
-        public List<Customer> readAllCustomers()
+        public List<lib.Customer> readAllCustomers()
         {
-            var customers = new List<Customer>();
+            var customers = new List<lib.Customer>();
             try
             {
                 using var context = new StoreDBContext(_options);
                 foreach (var customerLine in context.Customers)
                 {
-                    customers.Add(new Customer(customerLine.CustomerId, customerLine.FirstName, customerLine.LastName, customerLine.Balance));
+                    customers.Add(new lib.Customer(customerLine.CustomerId, customerLine.FirstName, customerLine.LastName, customerLine.Balance));
                 }
             }
             catch (Exception e)
@@ -117,9 +117,9 @@ namespace Storefront.Library
         /// Returns all inventory information
         /// </summary>
         /// <returns>Returns a dictionary with LocationName:List<Product> as Key/Value</returns>
-        public Dictionary<string, List<Product>> getAllInventory()
+        public Dictionary<string, List<lib.Product>> getAllInventory()
         {
-            var storeInventory = new Dictionary<string, List<Product>>();
+            var storeInventory = new Dictionary<string, List<lib.Product>>();
             try
             {
                 using var context = new StoreDBContext(_options);
@@ -131,10 +131,10 @@ namespace Storefront.Library
                     var locationId = locationDict[inventoryLine.LocationId];
                     if (!storeInventory.ContainsKey(locationId))
                     {
-                        storeInventory.Add(locationId, new List<Product>());
+                        storeInventory.Add(locationId, new List<lib.Product>());
                     }
                     var productId = inventoryLine.ProductId;
-                    storeInventory[locationId].Add(new Product(productId, productDict[productId].Item1, productDict[productId].Item2, inventoryLine.Amount));
+                    storeInventory[locationId].Add(new lib.Product(productId, productDict[productId].Item1, productDict[productId].Item2, inventoryLine.Amount));
                 }
             }
             catch (Exception e)
@@ -149,9 +149,9 @@ namespace Storefront.Library
         /// Returns all orders.
         /// </summary>
         /// <returns>Returns a List of all the stored orders</returns>
-        public List<Order> getAllOrders()
+        public List<lib.Order> getAllOrders()
         {
-            var ordersDict = new Dictionary<int, Order>();
+            var ordersDict = new Dictionary<int, lib.Order>();
             try
             {
                 using var context = new StoreDBContext(_options);
@@ -163,8 +163,8 @@ namespace Storefront.Library
                 {
                     var orderId = orderline.OrderId;
                     if (!ordersDict.ContainsKey(orderId))
-                        ordersDict.Add(orderline.OrderId, new Order(orderId, locationDict[orderline.Order.LocationId], orderline.Order.CustomerId, orderline.Order.OrderTime));
-                    ordersDict[orderId].addOrder(new Product(orderline.ProductId, orderline.Product.Name, orderline.Product.Price, orderline.Amount));
+                        ordersDict.Add(orderline.OrderId, new lib.Order(orderId, locationDict[orderline.Order.LocationId], orderline.Order.CustomerId, orderline.Order.OrderTime));
+                    ordersDict[orderId].addOrder(new lib.Product(orderline.ProductId, orderline.Product.Name, orderline.Product.Price, orderline.Amount));
                 }
             }
             catch (Exception)
@@ -179,9 +179,9 @@ namespace Storefront.Library
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns>A filtered List of all orders matching customerId</returns>
-        public List<Order> getCustomerOrders(int customerId)
+        public List<lib.Order> getCustomerOrders(int customerId)
         {
-            List<Order> allOrders = getAllOrders();
+            List<lib.Order> allOrders = getAllOrders();
             return allOrders.Where((order) => order.CustomerId == customerId).ToList();
         }
 
@@ -190,9 +190,9 @@ namespace Storefront.Library
         /// </summary>
         /// <param name="location">The location name</param>
         /// <returns>A filtered List of all orders matching the location name</returns>
-        public List<Order> getLocationOrders(string location)
+        public List<lib.Order> getLocationOrders(string location)
         {
-            List<Order> allOrders = getAllOrders();
+            List <lib.Order> allOrders = getAllOrders();
             return allOrders.Where((order) => order.Location == location).ToList();
         }
 
@@ -200,7 +200,7 @@ namespace Storefront.Library
         /// Saves all the inventory to the database
         /// </summary>
         /// <param name="inventory">The inventory stored as a dictionary with LocationName:List<Product> as its Key/Value</param>
-        public void saveAllInventory(Dictionary<string, List<Product>> inventory)
+        public void saveAllInventory(Dictionary<string, List<lib.Product>> inventory)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace Storefront.Library
         /// Saves the order to the database
         /// </summary>
         /// <param name="order">The checked out order to be saved</param>
-        public void saveOrder(Order order)
+        public void saveOrder(lib.Order order)
         {
             try
             {
@@ -260,7 +260,7 @@ namespace Storefront.Library
         /// Saves the customer to the database
         /// </summary>
         /// <param name="customer">The customer with changes to be saved</param>
-        public void saveCustomer(Customer customer)
+        public void saveCustomer(lib.Customer customer)
         {
             try
             {
@@ -280,7 +280,7 @@ namespace Storefront.Library
         /// Adds a new customer to the database
         /// </summary>
         /// <param name="customer">The newly created customer</param>
-        public void addCustomer(Customer customer)
+        public void addCustomer(lib.Customer customer)
         {
             try
             {

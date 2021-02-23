@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lib = Storefront.Library;
 
-namespace Storefront.Library
+namespace Storefront.DataAccess
 {
     public interface IDataRepository
     {
@@ -19,7 +20,7 @@ namespace Storefront.Library
         /// Get a List of Customers
         /// </summary>
         /// <returns>List of Customers</returns>
-        public List<Customer> readAllCustomers();
+        public List<lib.Customer> readAllCustomers();
 
         /// <summary>
         /// Returns a dictionary with locationId and locationName information
@@ -37,50 +38,50 @@ namespace Storefront.Library
         /// Returns all inventory information
         /// </summary>
         /// <returns>Returns a dictionary with LocationName:List<Product> as Key/Value</returns>
-        public Dictionary<string, List<Product>> getAllInventory();
+        public Dictionary<string, List<lib.Product>> getAllInventory();
 
         /// <summary>
         /// Returns all orders.
         /// </summary>
         /// <returns>Returns a List of all the stored orders</returns>
-        public List<Order> getAllOrders();
+        public List<lib.Order> getAllOrders();
 
         /// <summary>
         /// Returns all customer orders
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns>A filtered List of all orders matching customerId</returns>
-        public List<Order> getCustomerOrders(int customerId);
+        public List<lib.Order> getCustomerOrders(int customerId);
 
         /// <summary>
         /// Returns all location's orders
         /// </summary>
         /// <param name="location">The location name</param>
         /// <returns>A filtered List of all orders matching the location name</returns>
-        public List<Order> getLocationOrders(string location);
+        public List<lib.Order> getLocationOrders(string location);
 
         /// <summary>
         /// Saves all the inventory to the database
         /// </summary>
         /// <param name="inventory">The inventory stored as a dictionary with LocationName:List<Product> as its Key/Value</param>
-        public void saveAllInventory(Dictionary<string, List<Product>> inventory);
+        public void saveAllInventory(Dictionary<string, List<lib.Product>> inventory);
 
         /// <summary>
         /// Saves the order to the database
         /// </summary>
         /// <param name="order">The checked out order to be saved</param>
-        public void saveOrder(Order order);
+        public void saveOrder(lib.Order order);
 
         /// <summary>
         /// Saves the customer to the database
         /// </summary>
         /// <param name="customer">The customer with changes to be saved</param>
-        public void saveCustomer(Customer customer);
+        public void saveCustomer(lib.Customer customer);
 
         /// <summary>
         /// Adds a new customer to the database
         /// </summary>
         /// <param name="customer">The newly created customer</param>
-        public void addCustomer(Customer customer);
+        public void addCustomer(lib.Customer customer);
     }
 }
